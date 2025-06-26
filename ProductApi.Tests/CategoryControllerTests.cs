@@ -1,10 +1,8 @@
-using Xunit;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ProductApi.Controllers;
-using ProductApi.Services;
 using ProductApi.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using ProductApi.Services;
 
 namespace ProductApi.Tests
 {

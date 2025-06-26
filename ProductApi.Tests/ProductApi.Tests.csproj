@@ -19,11 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Xunit" />
+    <ProjectReference Include="..\ProductApi\ProductApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProductApi.csproj" />
+    <Using Include="Xunit" />
   </ItemGroup>
 
 </Project>
