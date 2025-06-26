@@ -4,7 +4,7 @@ using ProductApi.Controllers;
 using ProductApi.Models;
 using ProductApi.Services;
 
-namespace ProductApi.Tests
+namespace ProductApi.Tests.Controllers
 {
     public class CategoryControllerTests
     {

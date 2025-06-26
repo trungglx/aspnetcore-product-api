@@ -3,7 +3,7 @@ using ProductApi.Services;
 using ProductApi.Models;
 using System.Linq;
 
-namespace ProductApi.Tests
+namespace ProductApi.Tests.Services
 {
     public class CategoryServiceTests
     {
