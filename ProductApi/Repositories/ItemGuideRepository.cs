@@ -17,7 +17,7 @@ public class ItemGuideRepository : IItemGuideRepository
                       {
                           Id = i.Id,
                           Name = i.Name,
-                          Description = i.Description // Removed TypeId as GuideItem does not have this property
+                          Description = i.Description ?? string.Empty // Fix for CS8601: Provide a default value for null
                       })
                       .ToListAsync();
     }
@@ -28,7 +28,7 @@ public class ItemGuideRepository : IItemGuideRepository
         {
             Id = i.Id,
             Name = i.Name,
-            Description = i.Description // Removed TypeId as GuideItem does not have this property
+            Description = i.Description ?? string.Empty // Fix for CS8601: Provide a default value for null
         })
         .FirstOrDefaultAsync(i => i.Id == id);
 
@@ -38,7 +38,7 @@ public class ItemGuideRepository : IItemGuideRepository
         {
             Id = entity.Id,
             Name = entity.Name,
-            Description = entity.Description // Removed TypeId as GuideItem does not have this property
+            Description = entity.Description ?? string.Empty // Fix for CS8601: Provide a default value for null
         };
         _db.Items.Add(item);
         await _db.SaveChangesAsync();
@@ -51,7 +51,7 @@ public class ItemGuideRepository : IItemGuideRepository
         {
             Id = entity.Id,
             Name = entity.Name,
-            Description = entity.Description // Removed TypeId as GuideItem does not have this property
+            Description = entity.Description ?? string.Empty // Fix for CS8601: Provide a default value for null
         };
         _db.Items.Update(item);
         await _db.SaveChangesAsync();
