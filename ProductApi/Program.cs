@@ -1,52 +1,43 @@
+using ProductApi.Data;           // chứa ApplicationDbContext
 using Microsoft.EntityFrameworkCore;
 using ProductApi.Services;
+using ProductApi.Repositories;   // IMuItemRepository, ItemGuideRepository, ...
 
 var builder = WebApplication.CreateBuilder(args);
+string sqlConn = builder.Configuration.GetConnectionString("MuOnlineDb")!;
+string myConn  = builder.Configuration.GetConnectionString("ItemGuideDb")!;
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+// SQL Server
+builder.Services.AddDbContext<ItemGuideContext>(opts =>
+    opts.UseSqlServer(sqlConn));
+// MySQL
+builder.Services.AddDbContext<AppDbContext>(opts =>
+    opts.UseMySql(myConn, ServerVersion.AutoDetect(myConn)));
+builder.Services.AddDbContext<ApplicationDbContext>(opts =>
+    opts.UseMySql(myConn, ServerVersion.AutoDetect(myConn)));
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IMuItemRepository,     MuItemRepository>();      // dùng MuOnlineContext
+builder.Services.AddScoped<IItemGuideRepository, ItemGuideRepository>();    // dùng ItemGuideContext
+//builder.Services.AddScoped<IItemGuideService, ItemGuideService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IProductService, ProductService>();
-
 var app = builder.Build();
 app.MapControllers();
-
 app.UseSwagger();
 app.UseSwaggerUI();
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.MapOpenApi();
 }
-
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
