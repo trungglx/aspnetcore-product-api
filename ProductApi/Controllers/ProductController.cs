@@ -1,45 +1,48 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-[ApiController]
-[Route("api/[controller]")]
-public class ProductController : ControllerBase
+namespace ProductApi.Controllers
 {
-    private readonly IProductService _service;
-
-    public ProductController(IProductService service)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ProductController : ControllerBase
     {
-        _service = service;
-    }
+        private readonly IProductService _service;
 
-    [HttpGet]
-    public async Task<IActionResult> Get() =>
-        Ok(await _service.GetAllAsync());
+        public ProductController(IProductService service)
+        {
+            _service = service;
+        }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
-    {
-        var product = await _service.GetByIdAsync(id);
-        return product == null ? NotFound() : Ok(product);
-    }
+        [HttpGet]
+        public async Task<IActionResult> Get() =>
+            Ok(await _service.GetAllAsync());
 
-    [HttpPost]
-    public async Task<IActionResult> Create(Product product)
-    {
-        var created = await _service.CreateAsync(product);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-    }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var product = await _service.GetByIdAsync(id);
+            return product == null ? NotFound() : Ok(product);
+        }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Product product)
-    {
-        var updated = await _service.UpdateAsync(id, product);
-        return updated == null ? NotFound() : Ok(updated);
-    }
+        [HttpPost]
+        public async Task<IActionResult> Create(Product product)
+        {
+            var created = await _service.CreateAsync(product);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var deleted = await _service.DeleteAsync(id);
-        return deleted ? NoContent() : NotFound();
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Product product)
+        {
+            var updated = await _service.UpdateAsync(id, product);
+            return updated == null ? NotFound() : Ok(updated);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deleted = await _service.DeleteAsync(id);
+            return deleted ? NoContent() : NotFound();
+        }
     }
 }

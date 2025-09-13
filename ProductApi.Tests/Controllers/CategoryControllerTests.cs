@@ -80,7 +80,7 @@ namespace ProductApi.Tests.Controllers
             var updatedCat = new Category { Id = 1, Name = "New Name", Description = "Updated" };
             _mockService.Setup(s => s.Update(updatedCat));
 
-            var result = _controller.Update(updatedCat.Id, updatedCat); // ✅ đầy đủ tham số
+            var result = _controller.Update(updatedCat.Id, updatedCat);
 
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnCat = Assert.IsType<Category>(okResult.Value);

@@ -1,4 +1,5 @@
-﻿public class ProductService : IProductService
+﻿namespace ProductApi.Services;
+public class ProductService : IProductService
 {
     private readonly IProductRepository _repo;
 

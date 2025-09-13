@@ -28,7 +28,8 @@ public class ItemGuideRepository : IItemGuideRepository
         {
             Id = i.Id,
             Name = i.Name,
-            Description = i.Description ?? string.Empty // Fix for CS8601: Provide a default value for null
+            Description = i.Description ?? string.Empty, // Fix for CS8601: Provide a default value for null
+            TypeId = i.TypeId, // Assuming TypeId is part of GuideItem
         })
         .FirstOrDefaultAsync(i => i.Id == id);
 
@@ -36,9 +37,9 @@ public class ItemGuideRepository : IItemGuideRepository
     {
         var item = new Item
         {
-            Id = entity.Id,
             Name = entity.Name,
-            Description = entity.Description ?? string.Empty // Fix for CS8601: Provide a default value for null
+            Description = entity.Description ?? string.Empty, // Fix for CS8601: Provide a default value for null
+            TypeId = entity.TypeId, // Assuming TypeId is part of GuideItem
         };
         _db.Items.Add(item);
         await _db.SaveChangesAsync();
@@ -49,9 +50,9 @@ public class ItemGuideRepository : IItemGuideRepository
     {
         var item = new Item
         {
-            Id = entity.Id,
             Name = entity.Name,
-            Description = entity.Description ?? string.Empty // Fix for CS8601: Provide a default value for null
+            Description = entity.Description ?? string.Empty, // Fix for CS8601: Provide a default value for null
+            TypeId = entity.TypeId, // Assuming TypeId is part of GuideItem
         };
         _db.Items.Update(item);
         await _db.SaveChangesAsync();

@@ -1,28 +1,53 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProductApi.Services;
 using ProductApi.Data;
-using ProductApi.Dtos;
+using ProductApi.Services;
+
 namespace ProductApi.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class GuideItemsController : ControllerBase
 {
-    private readonly IItemGuideService _svc;
-    public GuideItemsController(IItemGuideService svc) => _svc = svc;
+    private readonly IItemGuideService _service;
+    public GuideItemsController(IItemGuideService service) => _service = service;
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<GuideItemDto>>> Get([FromQuery] string? search)
+    public async Task<IActionResult> GetAll([FromQuery] string? search = null)
     {
-        var items = await _svc.GetItemsAsync(search);
-        var dto = items.Select(i => new GuideItemDto(i.Id, i.Name, i.TypeId, i.Level, i.Options, i.ImageUrl, i.Description));
-        return Ok(dto);
+        var items = await _service.GetItemsAsync(search);
+        return Ok(items);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<GuideItemDto>> Get(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var item = await _svc.GetItemAsync(id);
-        if (item == null) return NotFound();
-        return new GuideItemDto(item.Id, item.Name, item.TypeId, item.Level, item.Options, item.ImageUrl, item.Description);
-    } 
+        var item = await _service.GetItemAsync(id);
+        return item is null ? NotFound() : Ok(item);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(GuideItem dto)
+    {
+        var item = await _service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, GuideItem dto)
+    {
+        if (id != dto.Id) return BadRequest();
+        var existing = await _service.GetItemAsync(id);
+        if (existing is null) return NotFound();
+        var updated = await _service.UpdateAsync(dto);
+        return Ok(updated);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var existing = await _service.GetItemAsync(id);
+        if (existing is null) return NotFound();
+        await _service.DeleteAsync(id);
+        return NoContent();
+    }
 }
